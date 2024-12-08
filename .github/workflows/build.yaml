@@ -56,7 +56,7 @@ jobs:
 
       - name: Generate release version
         id: version
-        run: echo "version=Telegram $(./build/telegram-bot-api --version 2>&1)" >> $GITHUB_OUTPUT
+        run: echo "version=Telegram $(build/telegram-bot-api --version 2>&1)" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
