@@ -54,6 +54,10 @@ jobs:
         id: date
         run: echo "date=$(date +'%F')" >> $GITHUB_OUTPUT
 
+      - name: Generate release version
+        id: version
+        run: echo "version=Telegram $(./build/telegram-bot-api --version 2>&1)" >> $GITHUB_OUTPUT
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         env:
@@ -61,6 +65,6 @@ jobs:
         with:
           name: ${{ steps.date.outputs.date }}
           tag_name: ${{ steps.date.outputs.date }}
-          body: "Telegram $(./build/telegram-bot-api --version 2>&1)"
+          body: ${{ steps.version.outputs.version }}
           files: build/telegram-bot-api-${{ matrix.compiler }}.tar.gz
           generate_release_notes: true
