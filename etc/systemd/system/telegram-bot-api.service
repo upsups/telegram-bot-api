@@ -1,0 +1,16 @@
+[Unit]
+Description=Telegram Bot API server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/etc/hysteria
+Restart=on-failure
+RestartSec=9s
+ExecStart=/opt/telegram-bot-api/telegram-bot-api --api-id=<arg> --api-hash=<arg> --http-port=9191
+MemoryMax=infinity
+TasksMax=infinity
+
+[Install]
+WantedBy=multi-user.target
