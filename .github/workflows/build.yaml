@@ -1,51 +1,62 @@
-name: Build Telegram Bot API
+name: Build
 
 on:
   schedule:
-    - cron: "0 0 1 * *"
+    - cron: "0 3 1 * *"
   workflow_dispatch:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        include:
+          - compiler: gcc
+            cc: gcc
+            cxx: g++
+          - compiler: clang
+            cc: clang
+            cxx: clang++
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        repository: tdlib/telegram-bot-api
-        submodules: recursive
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y make git zlib1g-dev libssl-dev gperf cmake g++
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y make git zlib1g-dev libssl-dev gperf cmake g++ clang
 
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build . --target telegram-bot-api
+      - name: Configure build
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
 
-    - name: Package
-      run: |
-        cd build
-        tar -czf telegram-bot-api.tar.gz telegram-bot-api
+      - name: Build
+        working-directory: build
+        run: cmake --build . --parallel $(nproc)
 
-    - name: Generate release date
-      id: date
-      run: echo "date=$(date +'%Y%m')" >> $GITHUB_OUTPUT
+      - name: Create Release Asset
+        run: |
+          cd build
+          tar czf telegram-bot-api-${{ matrix.compiler }}.tar.gz telegram-bot-api
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: build/telegram-bot-api.tar.gz
-        tag_name: build-${{ steps.date.outputs.date }}
-        name: Monthly Build ${{ steps.date.outputs.date }}
-        body: |
-          Monthly automated build of telegram-bot-api
-          Build date: ${{ steps.date.outputs.date }}
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate release date
+        id: date
+        run: echo "date=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Monthly Build ${{ steps.date.outputs.date }}
+          tag_name: build-${{ steps.date.outputs.date }}
+          files: build/telegram-bot-api-${{ matrix.compiler }}.tar.gz
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
