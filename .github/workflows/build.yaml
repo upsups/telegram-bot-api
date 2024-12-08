@@ -61,6 +61,6 @@ jobs:
         with:
           name: ${{ steps.date.outputs.date }}
           tag_name: ${{ steps.date.outputs.date }}
-          body: $(./build/telegram-bot-api --version)
+          body: "Telegram $(./build/telegram-bot-api --version 2>&1)"
           files: build/telegram-bot-api-${{ matrix.compiler }}.tar.gz
           generate_release_notes: true
