@@ -42,12 +42,13 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
 
-      - name: Build
+      - name: Build Telegram Bot API
         working-directory: build
         run: cmake --build .
 
       - name: Create Release Asset
-        run: tar -czf build/telegram-bot-api-${{ matrix.compiler }}.tar.gz build/telegram-bot-api
+        working-directory: build
+        run: tar -czf telegram-bot-api-${{ matrix.compiler }}.tar.gz telegram-bot-api
 
       - name: Generate release date
         id: date
