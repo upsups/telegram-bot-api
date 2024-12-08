@@ -60,31 +60,19 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ steps.date.outputs.date }}
-          tag_name: build-${{ steps.date.outputs.date }}
+          tag_name: ${{ steps.date.outputs.date }}
           files: build/telegram-bot-api-${{ matrix.compiler }}.tar.gz
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update README
-        if: matrix.compiler == 'gcc'
-        run: |
-          # Update the README
-          cat > README.md << EOF
-          # Telegram Bot API Server
-
-          This repository contains automated builds for the [official Telegram Bot API server](https://github.com/tdlib/telegram-bot-api).
-
-          ## Latest Release
-
-          Latest build: [${{ steps.date.outputs.date }}](../../releases/tag/build-${{ steps.date.outputs.date }})
-          - [GCC Build](../../releases/download/build-${{ steps.date.outputs.date }}/telegram-bot-api-gcc.tar.gz)
-          - [Clang Build](../../releases/download/build-${{ steps.date.outputs.date }}/telegram-bot-api-clang.tar.gz)
-          EOF
-
-          # Commit and push the updated README
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add README.md
-          git commit -m "Update README.md"
-          git push
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/telegram-bot-api-${{ matrix.compiler }}.tar.gz
+          asset_name: telegram-bot-api-${{ matrix.compiler }}.tar.gz
+          asset_content_type: application/gzip
