@@ -47,9 +47,7 @@ jobs:
         run: cmake --build .
 
       - name: Create Release Asset
-        run: |
-          cd build
-          tar czf telegram-bot-api-${{ matrix.compiler }}.tar.gz telegram-bot-api
+        run: tar -czf build/telegram-bot-api-${{ matrix.compiler }}.tar.gz build/telegram-bot-api
 
       - name: Generate release date
         id: date
