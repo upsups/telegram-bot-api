@@ -27,6 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
+          sudo DEBIAN_FRONTEND=noninteractive apt full-upgrade -y -o Dpkg::Options::="--force-confnew"
           sudo apt install -y make git zlib1g-dev libssl-dev gperf cmake g++ clang
 
       - name: Configure build
