@@ -3,7 +3,7 @@
 ```bash
 curl -fsSL https://github.com/upsups/telegram-bot-api/releases/latest/download/telegram-bot-api-clang.tar.gz -o telegram-bot-api-clang.tar.gz
 sudo mkdir -p /opt/telegram-bot-api
-sudo tar xzf telegram-bot-api-clang.tar.gz -C /opt/telegram-bot-api
+sudo tar -xzvf telegram-bot-api-clang.tar.gz -C /opt/telegram-bot-api
 sudo chown -R root:root /opt/telegram-bot-api
 sudo ln -sf /opt/telegram-bot-api/telegram-bot-api /usr/local/bin/telegram-bot-api
 
