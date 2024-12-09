@@ -32,7 +32,7 @@ cmake --build .
 
 sudo mkdir -p /opt/telegram-bot-api
 sudo cp -rf telegram-bot-api /opt/telegram-bot-api/
-sudo chmod 0755 /opt/telegram-bot-api/telegram-bot-api
+sudo chmod +x /opt/telegram-bot-api/telegram-bot-api
 sudo ln -sf /opt/telegram-bot-api/telegram-bot-api /usr/local/bin/telegram-bot-api
 
 sudo curl -fsSL https://github.com/upsups/telegram-bot-api/raw/refs/heads/main/etc/init.d/telegram-bot-api -o /etc/init.d/telegram-bot-api
