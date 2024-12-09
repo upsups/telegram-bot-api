@@ -21,8 +21,7 @@ respawn_max=0 # 0 means unlimited restarts
 
 # Dependencies
 depend() {
-    need network
-    after network
+    need localmount
 }
 
 # Pre-start Configuration
@@ -47,4 +46,7 @@ start_pre() {
     else
         einfo "Directory $tmp_dir already exists"
     fi
+
+    # Wait for 9 seconds
+    sleep 9
 }
