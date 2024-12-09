@@ -1,0 +1,50 @@
+#!/sbin/openrc-run
+
+# Service Metadata
+name="Telegram Bot API server"
+description="Telegram Bot API server"
+
+# Environment Variables
+export TELEGRAM_API_ID="<your_api_id>"
+export TELEGRAM_API_HASH="<your_api_hash>"
+
+# Service Configuration
+supervisor=supervise-daemon
+command="/opt/telegram-bot-api/telegram-bot-api"
+command_args="--local --http-port=9191 --log=/var/log/telegram-bot-api/main.log --temp-dir=/var/tmp/telegram-bot-api"
+command_user="root"
+pidfile="/run/telegram-bot-api.pid"
+
+# Restart Behavior
+respawn_delay=9
+respawn_max=0 # 0 means unlimited restarts
+
+# Dependencies
+depend() {
+    need network
+    after network
+}
+
+# Pre-start Configuration
+start_pre() {
+    local log_dir="/var/log/telegram-bot-api"
+    local tmp_dir="/var/tmp/telegram-bot-api"
+
+    if [ ! -d "$log_dir" ]; then
+        ebegin "Creating directory $log_dir"
+        mkdir -p "$log_dir"
+        chmod 0755 "$log_dir"
+        eend $? "Directory $log_dir created"
+    else
+        einfo "Directory $log_dir already exists"
+    fi
+
+    if [ ! -d "$tmp_dir" ]; then
+        ebegin "Creating directory $tmp_dir"
+        mkdir -p "$tmp_dir"
+        chmod 0755 "$tmp_dir"
+        eend $? "Directory $tmp_dir created"
+    else
+        einfo "Directory $tmp_dir already exists"
+    fi
+}
