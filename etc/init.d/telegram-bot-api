@@ -29,23 +29,18 @@ start_pre() {
     local log_dir="/var/log/telegram-bot-api"
     local tmp_dir="/var/tmp/telegram-bot-api"
 
-    if [ ! -d "$log_dir" ]; then
-        ebegin "Creating directory $log_dir"
-        mkdir -p "$log_dir"
-        chmod 0755 "$log_dir"
-        eend $? "Directory $log_dir created"
-    else
-        einfo "Directory $log_dir already exists"
-    fi
+    rm -rf "$log_dir"
+    rm -rf "$tmp_dir"
 
-    if [ ! -d "$tmp_dir" ]; then
-        ebegin "Creating directory $tmp_dir"
-        mkdir -p "$tmp_dir"
-        chmod 0755 "$tmp_dir"
-        eend $? "Directory $tmp_dir created"
-    else
-        einfo "Directory $tmp_dir already exists"
-    fi
+    ebegin "Creating directory $log_dir"
+    mkdir -p "$log_dir"
+    chmod 0755 "$log_dir"
+    eend $? "Directory $log_dir created"
+
+    ebegin "Creating directory $tmp_dir"
+    mkdir -p "$tmp_dir"
+    chmod 0755 "$tmp_dir"
+    eend $? "Directory $tmp_dir created"
 
     # Wait for 9 seconds
     sleep 9
