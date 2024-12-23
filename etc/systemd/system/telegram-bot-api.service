@@ -4,8 +4,10 @@ After=network.target
 
 [Service]
 Type=simple
-User=nobody
-ExecStart=/opt/telegram-bot-api/telegram-bot-api --api-id=<arg> --api-hash=<arg> --local --http-port=9191 --log=/dev/null --temp-dir=/var/tmp
+User=root
+Environment="TELEGRAM_API_ID="
+Environment="TELEGRAM_API_HASH="
+ExecStart=/opt/telegram-bot-api/telegram-bot-api --local --http-port=9191 --log=/var/log/telegram-bot-api.log --temp-dir=/var/tmp
 Restart=on-failure
 RestartSec=9s
 MemoryMax=infinity
